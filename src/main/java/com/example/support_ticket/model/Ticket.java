@@ -16,8 +16,7 @@ public class Ticket {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId; // Assuming this is the ID of the user who created the ticket
 
     private String title;
     private String message;

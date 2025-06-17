@@ -21,7 +21,7 @@ public class TicketService {
     public TicketResponse createTicket(TicketRequest request, String email) {
         User user = userService.findByEmail(email).orElseThrow();
         Ticket ticket = Ticket.builder()
-                .user(user)
+                .userId(user.getId())
                 .title(request.getTitle())
                 .message(request.getMessage())
                 .priority(request.getPriority())
@@ -33,7 +33,7 @@ public class TicketService {
 
     public List<TicketResponse> getMyTickets(String email) {
         User user = userService.findByEmail(email).orElseThrow();
-        return ticketRepository.findByUser(user).stream().map(this::mapToResponse).collect(toList());
+        return ticketRepository.findByUserId(user.getId()).stream().map(this::mapToResponse).collect(toList());
     }
 
     public List<TicketResponse> getAllTickets() {
@@ -56,7 +56,7 @@ public class TicketService {
     public TicketResponse getTicketById(Long id, String email) {
         Ticket ticket = ticketRepository.findById(id).orElseThrow();
         User user = userService.findByEmail(email).orElseThrow();
-        if (!ticket.getUser().getEmail().equals(email) && user.getRole() != User.Role.ADMIN) {
+        if (!ticket.getUserId().equals(user.getId()) && user.getRole() != User.Role.ADMIN) {
             throw new RuntimeException("Unauthorized");
         }
         return mapToResponse(ticket);

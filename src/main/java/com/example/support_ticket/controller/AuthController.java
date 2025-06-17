@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.support_ticket.dto.AuthRequest;
+import com.example.support_ticket.dto.AuthResponse;
 import com.example.support_ticket.dto.RegisterRequest;
 import com.example.support_ticket.service.AuthService;
 
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,7 +20,12 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

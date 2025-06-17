@@ -2,11 +2,12 @@ package com.example.support_ticket.service;
 
 import com.example.support_ticket.dto.*;
 import com.example.support_ticket.model.User;
-
+import com.example.support_ticket.repository.UserRepository;
+import com.example.support_ticket.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.support_ticket.model.User.Role;
@@ -15,17 +16,20 @@ import com.example.support_ticket.model.User.Role;
 public class AuthService {
     @Autowired
     private UserService userService;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder encoder;
+
     @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
+
+//    @Autowired
     private AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(encoder.encode(request.getPassword()));
         user.setRole(User.Role.CUSTOMER);
         userService.save(user);
 
