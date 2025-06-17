@@ -3,6 +3,7 @@ package com.example.support_ticket.service;
 import com.example.support_ticket.dto.*;
 import com.example.support_ticket.model.User;
 import com.example.support_ticket.repository.UserRepository;
+import com.example.support_ticket.security.SecurityConfig;
 import com.example.support_ticket.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.support_ticket.model.User.Role;
 
+//kenapa tidak bisa login? karena belum ada authentication manager yang di autowired
+// kenapa tidak bisa register? karena belum ada user service yang di autowired
+// kenapa tidak bisa register? karena belum ada jwt util yang di autowired
+// kenapa tidak bisa register? karena belum ada bCryptPasswordEncoder yang di autowired
 @Service
 public class AuthService {
     @Autowired
@@ -24,7 +29,7 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
 //    @Autowired
-    private AuthenticationManager authenticationManager;
+//    private AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
         User user = new User();
@@ -38,8 +43,8 @@ public class AuthService {
     }
 
     public AuthResponse login(AuthRequest request) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+//        authenticationManager.authenticate(
+//            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         User user = userService.findByEmail(request.getEmail()).orElseThrow();
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
