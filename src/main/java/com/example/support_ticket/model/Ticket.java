@@ -1,36 +1,33 @@
 package com.example.support_ticket.model;
 
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Ticket {
-    @Id @GeneratedValue
+    public enum Status { OPEN, IN_PROGRESS, RESOLVED }
+    public enum Priority { LOW, MEDIUM, HIGH }
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank private String title;
-    @NotBlank private String message;
+    private String title;
+    private String message;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
     private String response;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     private LocalDateTime createdAt;
-
-    public enum Priority { LOW, MEDIUM, HIGH }
-    public enum Status { OPEN, IN_PROGRESS, RESOLVED }
 }
